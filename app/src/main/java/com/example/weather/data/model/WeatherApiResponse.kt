@@ -33,7 +33,7 @@ data class WeatherApiResponse(
         val surface_pressure: Double? = null,
         val temperature_2m: Double? = null,
         val time: String? = null,
-        val weathercode: Int? = null,
+        val weather_code: Int? = null,
         val wind_direction_10m: Int? = null,
         val wind_gusts_10m: Double? = null,
         val wind_speed_10m: Double? = null
@@ -53,7 +53,7 @@ data class WeatherApiResponse(
         val surface_pressure: String? = null,
         val temperature_2m: String? = null,
         val time: String? = null,
-        val weathercode: String? = null,
+        val weather_code: String? = null,
         val wind_direction_10m: String? = null,
         val wind_gusts_10m: String? = null,
         val wind_speed_10m: String? = null
@@ -63,25 +63,25 @@ data class WeatherApiResponse(
         val temperature_2m_max: List<Double>? = null,
         val temperature_2m_min: List<Double>? = null,
         val time: List<String>? = null,
-        val weathercode: List<Int>? = null
+        val weather_code: List<Int>? = null
     )
     @Serializable
     data class DailyUnits(
         val temperature_2m_max: String? = null,
         val temperature_2m_min: String? = null,
         val time: String? = null,
-        val weathercode: String? = null
+        val weather_code: String? = null
     )
     @Serializable
     data class Hourly(
         val temperature_2m: List<Double>? = null,
         val time: List<String>? = null,
-        val weathercode: List<Int>? = null
+        val weather_code: List<Int>? = null
     )
     @Serializable
     data class HourlyUnits(
         val temperature_2m: String? = null,
         val time: String? = null,
-        val weathercode: String? = null
+        val weather_code: String? = null
     )
 }

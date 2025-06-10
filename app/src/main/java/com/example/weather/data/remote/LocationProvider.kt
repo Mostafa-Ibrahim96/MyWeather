@@ -1,4 +1,4 @@
-package com.example.myweather.data.remote
+package com.example.weather.data.remote
 
 import com.example.weather.data.model.LocationModel
 
