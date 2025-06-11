@@ -30,7 +30,7 @@ class WeatherViewModel(
     val hourlyForecast = _hourlyForecast.asStateFlow()
 
     private val _weeklyForecast =
-        MutableStateFlow<List<Triple<String, Int, Int>>>(emptyList()) // Day, Max Temp, Min Temp
+        MutableStateFlow<List<Triple<String, Int, Int>>>(emptyList())
     val weeklyForecast = _weeklyForecast.asStateFlow()
 
     init {

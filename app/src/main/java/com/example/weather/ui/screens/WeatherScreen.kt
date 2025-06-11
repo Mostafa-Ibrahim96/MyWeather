@@ -39,6 +39,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weather.R
@@ -71,9 +72,6 @@ fun WeatherScreen(viewModel: WeatherViewModel = getKoin().get()) {
             state.isLoading || (state.locationName == null && state.temperature == "N/A")
         }
     }
-
-
-
 
     WeatherContent(
         state = state,
@@ -139,149 +137,184 @@ private fun WeatherContent(
         if (isLoading) {
             LoadingScreen()
         } else {
-            Spacer(modifier = Modifier.height(64.dp))
-            LocationInfo(state.locationName)
-            WeatherIcon(
-                modifier = Modifier
-                    .offset(x = iconOffsetX, y = iconOffsetY)
-                    .padding(start = if (isScrolled) 0.dp else 37.dp),
-                painter = if (state.weatherIcon != 0) state.weatherIcon else R.drawable.fastwind,
+
+            WeatherHeader(
+                state = state,
                 imageSizeHeight = imageSizeHeight,
                 imageSizeWidth = imageSizeWidth,
-                shapeSize = shapeSize
+                shapeSize = shapeSize,
+                iconOffsetX = iconOffsetX,
+                iconOffsetY = iconOffsetY,
+                tempOffsetX = tempOffsetX,
+                tempOffsetY = tempOffsetY,
+                isScrolled = isScrolled
             )
-            TemperatureInfo(
-                modifier = Modifier.offset(x = tempOffsetX, y = tempOffsetY),
-                temperature = state.temperature + "°C",
-                weatherDescription = state.weatherDescription,
-                highTemperature = state.highTemperature + "°C",
-                lowTemperature = state.lowTemperature + "°C"
-            )
+
 
             Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .offset(y = if (isScrolled) (-150).dp else -18.dp)
+                modifier = Modifier.offset(y = if (isScrolled) (-150).dp else (-18).dp)
             ) {
-                VerticalSpacer24()
-                LazyVerticalGrid(
-                    modifier = Modifier
-                        .height(236.dp)
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    columns = GridCells.Fixed(3),
-                    verticalArrangement = Arrangement.spacedBy(6.dp),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    items(weatherDetails.detailGrid) { detail ->
-                        WeatherDetailsItem(
-                            painter = getIconForDetail(detail),
-                            value = when {
-                                detail.windSpeed.isNotEmpty() -> detail.windSpeed + " KM/h"
-                                detail.humidity.isNotEmpty() -> detail.humidity + "%"
-                                detail.rain.isNotEmpty() -> detail.rain + "%"
-                                detail.uv.isNotEmpty() -> detail.uv
-                                detail.pressure.isNotEmpty() -> detail.pressure + " hPa"
-                                detail.feelsLike.isNotEmpty() -> detail.feelsLike + "°C"
-                                else -> "N/A"
-                            },
-                            description = getLabelForDetail(detail)
-                        )
-                    }
-                }
-
-                VerticalSpacer24()
-                Text(
-                    text = "Today",
-                    fontSize = 20.sp,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = urbanistFont,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
-                VerticalSpacer12()
-                LazyRow(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(hourlyForecast) { (hour, temp) ->
-                        ForecastItem(
-                            painter = if (state.weatherIcon != 0) state.weatherIcon else R.drawable.fastwind,
-                            temperatureValue = temp,
-                            hour = hour
-                        )
-                    }
-                }
-
-                VerticalSpacer24()
-                Text(
-                    text = "Next 7 days",
-                    fontSize = 20.sp,
-                    color = if (isSystemInDarkTheme()) Color.White else Color(0xFF060414),
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = urbanistFont,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
-                VerticalSpacer12()
-
-                LazyColumn(
-                    modifier = if (isSystemInDarkTheme()) {
-                        modifier
-                            .height(530.dp)
-                            .padding(horizontal = 16.dp)
-                            .background(
-                                color = Color(0xFF060414).copy(0.7f),
-                                shape = RoundedCornerShape(20.dp)
-                            )
-                            .border(
-                                width = 1.dp,
-                                color = Color(0xFF060414).copy(alpha = 0.08f),
-                                shape = RoundedCornerShape(20.dp)
-                            )
-                    } else {
-                        modifier
-                            .height(530.dp)
-                            .padding(horizontal = 16.dp)
-                            .background(
-                                color = Color(0xFFFFFFFF).copy(0.7f),
-                                shape = RoundedCornerShape(20.dp)
-                            )
-                            .border(
-                                width = 1.dp,
-                                color =MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.08f),
-                                shape = RoundedCornerShape(20.dp)
-                            )
-
-                    },
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-
-                    ) {
-
-                    items(weeklyForecast.size + weeklyForecast.size - 1) { index ->
-                        if (index % 2 == 0) {
-                            val itemIndex = index / 2
-                            WeeklyForecastItem(
-                                day = weeklyForecast[itemIndex].first,
-                                maxTemp = "${weeklyForecast[itemIndex].second}°C",
-                                minTemp = "${weeklyForecast[itemIndex].third}°C",
-                                weatherIcon = if (state.weatherIcon != 0) state.weatherIcon else R.drawable.fastwind
-                            )
-                        } else {
-                            Divider(
-                                modifier = Modifier
-                                    .fillMaxWidth(),
-                                color =MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.08f),
-                                thickness = 1.dp
-                            )
-                        }
-                    }
-                }
+                WeatherDetailsGridSection(weatherDetails = weatherDetails)
+                HourlyForecastSection(hourlyForecast = hourlyForecast, state = state)
+                WeeklyForecastSection(weeklyForecast = weeklyForecast, state = state)
             }
         }
     }
 
 }
+@Composable
+private fun WeatherHeader(
+    state: WeatherUiState,
+    imageSizeHeight: Dp,
+    imageSizeWidth: Dp,
+    shapeSize: Dp,
+    iconOffsetX: Dp,
+    iconOffsetY: Dp,
+    tempOffsetX: Dp,
+    tempOffsetY: Dp,
+    isScrolled: Boolean
+) {
+    Spacer(modifier = Modifier.height(64.dp))
+    LocationInfo(state.locationName)
+    WeatherIcon(
+        modifier = Modifier
+            .offset(x = iconOffsetX, y = iconOffsetY)
+            .padding(start = if (isScrolled) 0.dp else 37.dp),
+        painter = if (state.weatherIcon != 0) state.weatherIcon else R.drawable.fastwind,
+        imageSizeHeight = imageSizeHeight,
+        imageSizeWidth = imageSizeWidth,
+        shapeSize = shapeSize
+    )
+    TemperatureInfo(
+        modifier = Modifier.offset(x = tempOffsetX, y = tempOffsetY),
+        temperature = state.temperature + "°C",
+        weatherDescription = state.weatherDescription,
+        highTemperature = state.highTemperature + "°C",
+        lowTemperature = state.lowTemperature + "°C"
+    )
+}
+
+
+@Composable
+private fun WeatherDetailsGridSection(weatherDetails: WeatherDetailsGrid) {
+    VerticalSpacer24()
+    LazyVerticalGrid(
+        modifier = Modifier
+            .height(236.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        columns = GridCells.Adaptive(minSize = 115.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        items(weatherDetails.detailGrid) { detail ->
+            WeatherDetailsItem(
+                painter = getIconForDetail(detail),
+                value = when {
+                    detail.windSpeed.isNotEmpty() -> detail.windSpeed + " KM/h"
+                    detail.humidity.isNotEmpty() -> detail.humidity + "%"
+                    detail.rain.isNotEmpty() -> detail.rain + "%"
+                    detail.uv.isNotEmpty() -> detail.uv
+                    detail.pressure.isNotEmpty() -> detail.pressure + " hPa"
+                    detail.feelsLike.isNotEmpty() -> detail.feelsLike + "°C"
+                    else -> "N/A"
+                },
+                description = getLabelForDetail(detail)
+            )
+        }
+    }
+}
+
+@Composable
+private fun HourlyForecastSection(hourlyForecast: List<Pair<String, String>>, state: WeatherUiState) {
+    VerticalSpacer24()
+    Text(
+        text = "Today",
+        fontSize = 20.sp,
+        color = MaterialTheme.colorScheme.onSurface,
+        fontWeight = FontWeight.SemiBold,
+        fontFamily = urbanistFont,
+        modifier = Modifier.padding(start = 16.dp)
+    )
+    VerticalSpacer12()
+    LazyRow(
+        modifier = Modifier
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(hourlyForecast) { (hour, temp) ->
+            ForecastItem(
+                painter = if (state.weatherIcon != 0) state.weatherIcon else R.drawable.fastwind,
+                temperatureValue = temp,
+                hour = hour
+            )
+        }
+    }
+}
+
+@Composable
+private fun WeeklyForecastSection(weeklyForecast: List<Triple<String, Int, Int>>, state: WeatherUiState) {
+    VerticalSpacer24()
+    Text(
+        text = "Next 7 days",
+        fontSize = 20.sp,
+        color = if (isSystemInDarkTheme()) Color.White else Color(0xFF060414),
+        fontWeight = FontWeight.SemiBold,
+        fontFamily = urbanistFont,
+        modifier = Modifier.padding(start = 16.dp)
+    )
+    VerticalSpacer12()
+    LazyColumn(
+        modifier = if (isSystemInDarkTheme()) {
+            Modifier
+                .height(530.dp)
+                .padding(horizontal = 16.dp)
+                .background(
+                    color = Color(0xFF060414).copy(0.7f),
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f),
+                    shape = RoundedCornerShape(20.dp)
+                )
+        } else {
+            Modifier
+                .height(530.dp)
+                .padding(horizontal = 16.dp)
+                .background(
+                    color = Color(0xFFFFFFFF).copy(0.7f),
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f),
+                    shape = RoundedCornerShape(20.dp)
+                )
+        },
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(weeklyForecast.size + weeklyForecast.size - 1) { index ->
+            if (index % 2 == 0) {
+                val itemIndex = index / 2
+                WeeklyForecastItem(
+                    day = weeklyForecast[itemIndex].first,
+                    maxTemp = "${weeklyForecast[itemIndex].second}°C",
+                    minTemp = "${weeklyForecast[itemIndex].third}°C",
+                    weatherIcon = if (state.weatherIcon != 0) state.weatherIcon else R.drawable.fastwind
+                )
+            } else {
+                Divider(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.08f),
+                    thickness = 1.dp
+                )
+            }
+        }
+    }
+}
+
 
 private fun getIconForDetail(detail: WeatherDetailUiState): Int {
     return when {

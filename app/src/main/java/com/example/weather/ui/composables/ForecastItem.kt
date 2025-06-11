@@ -17,7 +17,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -67,12 +66,12 @@ fun ForecastItem(
                 .height(120.dp)
                 .width(88.dp)
                 .background(
-                    color =MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
                     shape = RoundedCornerShape(20.dp)
                 )
                 .border(
                     width = 1.dp,
-                    color =MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.08f),
+                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.08f),
                     shape = RoundedCornerShape(20.dp)
                 )
                 .align(Alignment.BottomCenter)
@@ -131,7 +130,7 @@ fun Hour(modifier: Modifier = Modifier, hour: String) {
 @Composable
 fun ForecastItemPreview() {
     ForecastItem(
-        painter = R.drawable.mainlyclear,
+        painter = R.drawable.clear_sky,
         temperatureValue = "25°",
         hour = "12:00"
 

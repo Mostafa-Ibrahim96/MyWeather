@@ -64,7 +64,8 @@ fun TemperatureInfo(
                 .height(35.dp)
                 .width(168.dp)
                 .background(
-                    color = Color(0xFF060414).copy(alpha = 0.08f),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f),
+
                     shape = RoundedCornerShape(100.dp)
                 ),
             contentAlignment = Alignment.Center
@@ -107,7 +108,7 @@ fun TemperatureInfo(
                     fontWeight = FontWeight(500),
                     letterSpacing = 0.25.sp,
                     modifier = Modifier.padding(start = 4.dp),
-                    color = Color(0xFF060414).copy(alpha = 0.6f),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                 )
             }
         }
