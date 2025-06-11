@@ -58,7 +58,7 @@ class GoogleLocationManager(
             Log.d(
                 "GoogleLocationManager",
                 "Location available: latitude=${location.latitude}, longitude=${location.longitude}, country=$countryName"
-            )            // Return location data
+            )
             return LocationModel(
                 latitude = location.latitude,
                 longitude = location.longitude,

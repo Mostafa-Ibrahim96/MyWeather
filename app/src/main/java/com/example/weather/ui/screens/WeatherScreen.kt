@@ -95,7 +95,6 @@ private fun WeatherContent(
 
     val scrollState = rememberScrollState()
     var isScrolled by remember { mutableStateOf(false) }
-
     LaunchedEffect(scrollState.value) {
         isScrolled = scrollState.value > 50
     }

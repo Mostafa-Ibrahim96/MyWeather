@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
-import com.example.myweather.data.di.viewModelModule
+import com.example.weather.data.di.viewModelModule
 import com.example.weather.data.di.appModule
 import com.example.weather.ui.screens.WeatherScreen
 import com.example.weather.ui.theme.WeatherTheme
@@ -26,13 +26,6 @@ class MainActivity : ComponentActivity() {
         val controller = WindowCompat.getInsetsController(window, window.decorView)
         controller.isAppearanceLightStatusBars = false
 
-
-
-
-        GlobalContext.startKoin {
-            androidContext(this@MainActivity)
-            modules(appModule, viewModelModule)
-        }
         setContent {
             WeatherTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->

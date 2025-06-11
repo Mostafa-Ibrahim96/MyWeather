@@ -14,7 +14,6 @@ data class WeatherUiState(
     val pressure: String = "",
     val feelsLike: String = "",
     val weatherCode: Int? = null ,
-
     val forecastTime: List<String> = emptyList(),
     val forecastTemp: List<String> = emptyList(),
     val dayName: List<String> = emptyList(),

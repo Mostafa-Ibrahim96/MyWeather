@@ -1,4 +1,4 @@
-package com.example.myweather.data.di
+package com.example.weather.data.di
 
 import com.example.weather.ui.viewModel.WeatherViewModel
 import org.koin.core.module.dsl.viewModel

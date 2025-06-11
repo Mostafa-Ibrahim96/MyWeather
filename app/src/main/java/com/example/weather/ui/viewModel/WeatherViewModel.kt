@@ -41,6 +41,11 @@ class WeatherViewModel(
         viewModelScope.launch {
             val location = locationProvider.getCurrentLocation()
             val weatherData = weatherRepository.getCurrentWeather(location)
+            val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+            val currentMinute = Calendar.getInstance().get(Calendar.MINUTE)
+            val firstHour = weatherData!!.hourly?.time?.firstOrNull()?.split("T")?.get(1)?.substring(0, 2)?.toIntOrNull() ?: currentHour
+            val isNight = firstHour >= 18 || firstHour < 6
+
             if (weatherData != null && weatherData.current != null) {
                 val weatherCode = weatherData.current.weather_code ?: 0
                 _state.value = _state.value.copy(
@@ -85,9 +90,14 @@ class WeatherViewModel(
                 weatherData.hourly?.let { hourly ->
                     val forecastList = hourly.time?.zip(hourly.temperature_2m ?: emptyList())
                         ?.map { (time, temp) ->
-                            Pair(time.split("T")[1], "${temp.toInt()}°C")
-                        }?.take(24) ?: emptyList()
-                    _hourlyForecast.value = forecastList
+                            Pair(time.split("T")[1], "${temp.toInt()}°C") // "HH:MM", "temp°C"
+                        } ?: emptyList()
+                    val filteredForecast = forecastList.filter { hour ->
+                        val forecastHour = hour.first.substring(0, 2).toIntOrNull() ?: 0
+                        val forecastMinute = hour.first.substring(3, 5).toIntOrNull() ?: 0
+                        (forecastHour > currentHour) || (forecastHour == currentHour && forecastMinute >= currentMinute)
+                    }.take(24 - currentHour)
+                    _hourlyForecast.value = filteredForecast
                 }
 
                 weatherData.daily?.let { daily ->
