@@ -53,9 +53,11 @@ import com.example.weather.ui.composables.WeatherDetailsItem
 import com.example.weather.ui.composables.WeatherIcon
 import com.example.weather.ui.composables.WeeklyForecastItem
 import com.example.weather.ui.theme.urbanistFont
+import com.example.weather.ui.uiState.HourlyForecastItem
 import com.example.weather.ui.uiState.WeatherDetailUiState
 import com.example.weather.ui.uiState.WeatherDetailsGrid
 import com.example.weather.ui.uiState.WeatherUiState
+import com.example.weather.ui.uiState.WeeklyForecastItem
 import com.example.weather.ui.viewModel.WeatherViewModel
 import org.koin.java.KoinJavaComponent.getKoin
 
@@ -69,7 +71,7 @@ fun WeatherScreen(viewModel: WeatherViewModel = getKoin().get()) {
 
     val isLoading by remember {
         derivedStateOf {
-            state.isLoading || (state.locationName == null && state.temperature == "N/A")
+            state.loading.isLoading || (state.currentWeather.locationName.isEmpty() && state.currentWeather.temperature == "N/A")
         }
     }
 
@@ -87,8 +89,8 @@ private fun WeatherContent(
     modifier: Modifier = Modifier,
     state: WeatherUiState = WeatherUiState(),
     weatherDetails: WeatherDetailsGrid = WeatherDetailsGrid(),
-    hourlyForecast: List<Pair<String, String>> = emptyList(),
-    weeklyForecast: List<Triple<String, Int, Int>> = emptyList(),
+    hourlyForecast:List<HourlyForecastItem> = emptyList(),
+    weeklyForecast:List<WeeklyForecastItem> = emptyList(),
     isLoading: Boolean,
 ) {
 
@@ -154,8 +156,8 @@ private fun WeatherContent(
                 modifier = Modifier.offset(y = if (isScrolled) (-150).dp else (-18).dp)
             ) {
                 WeatherDetailsGridSection(weatherDetails = weatherDetails)
-                HourlyForecastSection(hourlyForecast = hourlyForecast, state = state)
-                WeeklyForecastSection(weeklyForecast = weeklyForecast, state = state)
+                HourlyForecastSection(hourlyForecast = hourlyForecast)
+                WeeklyForecastSection(weeklyForecast = weeklyForecast)
             }
         }
     }
@@ -174,22 +176,22 @@ private fun WeatherHeader(
     isScrolled: Boolean
 ) {
     Spacer(modifier = Modifier.height(64.dp))
-    LocationInfo(state.locationName)
+    LocationInfo(state.currentWeather.locationName)
     WeatherIcon(
         modifier = Modifier
             .offset(x = iconOffsetX, y = iconOffsetY)
             .padding(start = if (isScrolled) 0.dp else 37.dp),
-        painter = if (state.weatherIcon != 0) state.weatherIcon else R.drawable.fastwind,
+        painter = if (state.currentWeather.weatherIcon != 0) state.currentWeather.weatherIcon else R.drawable.fastwind,
         imageSizeHeight = imageSizeHeight,
         imageSizeWidth = imageSizeWidth,
         shapeSize = shapeSize
     )
     TemperatureInfo(
         modifier = Modifier.offset(x = tempOffsetX, y = tempOffsetY),
-        temperature = state.temperature + "°C",
-        weatherDescription = state.weatherDescription,
-        highTemperature = state.highTemperature + "°C",
-        lowTemperature = state.lowTemperature + "°C"
+        temperature = state.currentWeather.temperature + "°C",
+        weatherDescription = state.currentWeather.weatherDescription,
+        highTemperature = state.currentWeather.highTemperature + "°C",
+        lowTemperature = state.currentWeather.lowTemperature + "°C"
     )
 }
 
@@ -225,7 +227,7 @@ private fun WeatherDetailsGridSection(weatherDetails: WeatherDetailsGrid) {
 }
 
 @Composable
-private fun HourlyForecastSection(hourlyForecast: List<Pair<String, String>>, state: WeatherUiState) {
+private fun HourlyForecastSection(hourlyForecast:List<HourlyForecastItem>) {
     VerticalSpacer24()
     Text(
         text = "Today",
@@ -241,9 +243,10 @@ private fun HourlyForecastSection(hourlyForecast: List<Pair<String, String>>, st
             .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(hourlyForecast) { (hour, temp) ->
+        items(hourlyForecast) { (painter, temp,hour) ->
+
             ForecastItem(
-                painter = if (state.weatherIcon != 0) state.weatherIcon else R.drawable.fastwind,
+                painter =painter,
                 temperatureValue = temp,
                 hour = hour
             )
@@ -252,7 +255,7 @@ private fun HourlyForecastSection(hourlyForecast: List<Pair<String, String>>, st
 }
 
 @Composable
-private fun WeeklyForecastSection(weeklyForecast: List<Triple<String, Int, Int>>, state: WeatherUiState) {
+private fun WeeklyForecastSection(weeklyForecast: List<WeeklyForecastItem>) {
     VerticalSpacer24()
     Text(
         text = "Next 7 days",
@@ -297,10 +300,10 @@ private fun WeeklyForecastSection(weeklyForecast: List<Triple<String, Int, Int>>
             if (index % 2 == 0) {
                 val itemIndex = index / 2
                 WeeklyForecastItem(
-                    day = weeklyForecast[itemIndex].first,
-                    maxTemp = "${weeklyForecast[itemIndex].second}°C",
-                    minTemp = "${weeklyForecast[itemIndex].third}°C",
-                    weatherIcon = if (state.weatherIcon != 0) state.weatherIcon else R.drawable.fastwind
+                    day = weeklyForecast[itemIndex].day,
+                    maxTemp = "${weeklyForecast[itemIndex].maxTemp}°C",
+                    minTemp = "${weeklyForecast[itemIndex].minTemp}°C",
+                    weatherIcon = weeklyForecast[itemIndex].iconResId
                 )
             } else {
                 Divider(

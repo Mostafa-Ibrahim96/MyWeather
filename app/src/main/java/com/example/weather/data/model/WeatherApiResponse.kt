@@ -76,7 +76,8 @@ data class WeatherApiResponse(
     data class Hourly(
         val temperature_2m: List<Double>? = null,
         val time: List<String>? = null,
-        val weather_code: List<Int>? = null
+        val weather_code: List<Int>? = null,
+        val is_day: String? = null,
     )
     @Serializable
     data class HourlyUnits(
