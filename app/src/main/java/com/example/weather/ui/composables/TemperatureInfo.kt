@@ -105,7 +105,7 @@ fun TemperatureInfo(
                     fontFamily = urbanistFont,
                     fontWeight = FontWeight(500),
                     letterSpacing = 0.25.sp,
-                    modifier = Modifier.padding(start = 4.dp),
+                    modifier = Modifier.padding(start = 4.dp, end = 8.dp),
                     color = if (isNight) {
                         Color(0xFFFFFFFF).copy(alpha = 0.6f)
                     }else{
@@ -113,17 +113,18 @@ fun TemperatureInfo(
                     }
 
                 )
-                Image(
-                    painter = painterResource(id = R.drawable.line),
-                    contentDescription = "Weather Icon",
-                    Modifier.padding(vertical = 10.5.dp, horizontal = 8.dp),
-                    colorFilter = ColorFilter.tint(if (isNight) {
-                        Color(0xFFFFFFFF).copy(0.24f)
-                    } else {
-                        MaterialTheme.colorScheme.onPrimary.copy(0.24f)
-                    })
 
 
+                Box(
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .width(1.dp)
+                        .height(14.dp)
+                        .background( if (isNight) {
+                            Color(0xFFFFFFFF).copy(0.24f)
+                        } else {
+                            MaterialTheme.colorScheme.onPrimary.copy(0.24f)
+                        })
                 )
 
                 Image(
@@ -131,6 +132,7 @@ fun TemperatureInfo(
                     contentDescription = "Weather Icon",
                     modifier = Modifier.size(12.dp),
                     colorFilter = ColorFilter.tint(
+
                         color = if (isNight) Color(0xFFFFFFFF).copy(0.87f) else MaterialTheme.colorScheme.onPrimary.copy(.87f)
                     )
                 )

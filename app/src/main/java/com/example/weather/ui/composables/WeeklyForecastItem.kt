@@ -1,6 +1,7 @@
 package com.example.weather.ui.composables
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -108,17 +110,18 @@ fun WeeklyForecastItem(
                     }
 
                 )
-                Image(
-                    painter = painterResource(id =if (isNight) R.drawable.line else R.drawable.line),
-                    contentDescription = "Min Temp Icon",
-                    modifier = Modifier.padding(vertical = 5.dp),
-                    colorFilter = ColorFilter.tint(if (isNight) {
-                        Color(0xFFFFFFFF).copy(0.24f)
-                    } else {
-                        MaterialTheme.colorScheme.onPrimary.copy(0.24f)
-                    })
 
+                Box(
+                    modifier = Modifier
+                        .width(1.dp)
+                        .height(14.dp)
+                        .background( if (isNight) {
+                            Color(0xFFFFFFFF).copy(0.24f)
+                        } else {
+                            MaterialTheme.colorScheme.onPrimary.copy(0.24f)
+                        })
                 )
+
 
                 Image(
                     painter = painterResource(id = R.drawable.arrowdown),
@@ -155,6 +158,6 @@ fun WeeklyForecastItemPreview() {
         maxTemp = "32°C",
         minTemp = "20°C",
         weatherIcon = R.drawable.mainlyclear,
-        isNight = false
+        isNight = true
     )
 }
