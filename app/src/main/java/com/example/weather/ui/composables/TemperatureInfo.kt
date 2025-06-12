@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -35,7 +36,8 @@ fun TemperatureInfo(
     temperature: String,
     weatherDescription: String,
     highTemperature: String,
-    lowTemperature: String
+    lowTemperature: String,
+    isNight:Boolean
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -45,7 +47,12 @@ fun TemperatureInfo(
             text = temperature,
             fontSize = 64.sp,
             fontFamily = urbanistFont,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = if (isNight) {
+                Color(0xFFFFFFFF)
+            }else{
+                MaterialTheme.colorScheme.onSurface
+            }
+          ,
             fontWeight = FontWeight(600),
             letterSpacing = 0.25.sp
         )
@@ -56,7 +63,12 @@ fun TemperatureInfo(
             fontWeight = FontWeight(500),
             letterSpacing = 0.25.sp,
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+            color = if (isNight) {
+                Color(0xFFFFFFFF).copy(alpha = 0.6f)
+            }else{
+                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+            }
+
         )
         Spacer(modifier = Modifier.height(12.dp))
         Box(
@@ -64,7 +76,11 @@ fun TemperatureInfo(
                 .height(35.dp)
                 .width(168.dp)
                 .background(
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f),
+                    color = if (isNight) {
+                        Color(0xFFFFFFFF).copy(alpha = 0.08f)
+                    }else{
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f)
+                    },
 
                     shape = RoundedCornerShape(100.dp)
                 ),
@@ -78,7 +94,10 @@ fun TemperatureInfo(
                 Image(
                     painter = painterResource(id = R.drawable.arrowup),
                     contentDescription = "Weather Icon",
-                    modifier = Modifier.size(12.dp)
+                    modifier = Modifier.size(12.dp),
+                    colorFilter = ColorFilter.tint(
+                        color = if (isNight) Color(0xFFFFFFFF).copy(0.87f) else MaterialTheme.colorScheme.onPrimary.copy(.87f)
+                    )
                 )
                 Text(
                     text = highTemperature,
@@ -87,19 +106,33 @@ fun TemperatureInfo(
                     fontWeight = FontWeight(500),
                     letterSpacing = 0.25.sp,
                     modifier = Modifier.padding(start = 4.dp),
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                    color = if (isNight) {
+                        Color(0xFFFFFFFF).copy(alpha = 0.6f)
+                    }else{
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    }
+
                 )
                 Image(
                     painter = painterResource(id = R.drawable.line),
                     contentDescription = "Weather Icon",
-                    Modifier.padding(vertical = 10.5.dp, horizontal = 8.dp)
+                    Modifier.padding(vertical = 10.5.dp, horizontal = 8.dp),
+                    colorFilter = ColorFilter.tint(if (isNight) {
+                        Color(0xFFFFFFFF).copy(0.24f)
+                    } else {
+                        MaterialTheme.colorScheme.onPrimary.copy(0.24f)
+                    })
+
 
                 )
 
                 Image(
                     painter = painterResource(id = R.drawable.arrowdown),
                     contentDescription = "Weather Icon",
-                    modifier = Modifier.size(12.dp)
+                    modifier = Modifier.size(12.dp),
+                    colorFilter = ColorFilter.tint(
+                        color = if (isNight) Color(0xFFFFFFFF).copy(0.87f) else MaterialTheme.colorScheme.onPrimary.copy(.87f)
+                    )
                 )
                 Text(
                     text = lowTemperature,
@@ -108,8 +141,11 @@ fun TemperatureInfo(
                     fontWeight = FontWeight(500),
                     letterSpacing = 0.25.sp,
                     modifier = Modifier.padding(start = 4.dp),
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                )
+                    color = if (isNight) {
+                        Color(0xFFFFFFFF).copy(alpha = 0.6f)
+                    }else{
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                    }                )
             }
         }
     }
@@ -123,6 +159,7 @@ fun TemperatureInfoPreview() {
         temperature = "25°C",
         weatherDescription = "Partly cloudy",
         highTemperature = "30°C",
-        lowTemperature = "20°C"
+        lowTemperature = "20°C",
+        isNight = false
     )
 }

@@ -1,8 +1,6 @@
 package com.example.weather.ui.screens
 
 
-import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
@@ -22,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.weather.ui.composables.HourlyForecastSection
@@ -45,18 +42,11 @@ fun WeatherScreen(viewModel: WeatherViewModel = getKoin().get()) {
     val hourlyForecast by viewModel.hourlyForecast.collectAsState()
     val weeklyForecast by viewModel.weeklyForecast.collectAsState()
 
-    val isLoading by remember {
-        derivedStateOf {
-            state.loading.isLoading || (state.currentWeather.locationName.isEmpty() && state.currentWeather.temperature == "N/A")
-        }
-    }
-
     WeatherContent(
         state = state,
         weatherDetails = weatherDetails,
         hourlyForecast = hourlyForecast,
         weeklyForecast = weeklyForecast,
-        isLoading = isLoading,
     )
 }
 
@@ -67,50 +57,36 @@ private fun WeatherContent(
     weatherDetails: List<WeatherDetailsState> = emptyList(),
     hourlyForecast: List<HourlyForecastUiState> = emptyList(),
     weeklyForecast: List<WeeklyForecastItem> = emptyList(),
-    isLoading: Boolean,
 ) {
 
     val scrollState = rememberScrollState()
-    var isScrolled by remember { mutableStateOf(false) }
-    LaunchedEffect(scrollState.value) {
-        isScrolled = scrollState.value > 50
+
+    val isScrolled by remember {
+        derivedStateOf {
+            scrollState.value > 50
+        }
     }
 
+    val isNight = state.isNight
+
+    val backgroundBrush = if (isSystemInDarkTheme() || isNight) {
+        Brush.linearGradient(colors = listOf(Color(0xFF060414), Color(0xFF0D0C19)))
+    } else {
+        Brush.linearGradient(colors = listOf(Color(0xFF87CEFA), Color(0xFFFFFFFF)))
+    }
 
     Column(
-        modifier = if (isSystemInDarkTheme()) {
-            modifier
-                .fillMaxHeight()
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            Color(0xFF060414),
-                            Color(0xFF0D0C19)
-                        )
-                    )
-                )
-                .verticalScroll(scrollState)
-        } else {
-            modifier
-                .fillMaxHeight()
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = listOf(
-                            Color(0xFF87CEFA),
-                            Color(0xFFFFFFFF)
-                        )
-                    )
-                )
-                .verticalScroll(scrollState)
-        },
+        modifier = modifier
+            .fillMaxHeight()
+            .background(brush = backgroundBrush)
+            .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
-
     ) {
-        if (isLoading) {
+        if (state.loading.isLoading) {
             LoadingScreen()
-        }
-        else {
+        } else {
             WeatherHeader(
+                isNight = isNight,
                 state = state,
                 isScrolled = isScrolled
             )
@@ -122,19 +98,11 @@ private fun WeatherContent(
                     )
                 }
             ) {
-                WeatherDetailsGridSection(weatherDetails = weatherDetails)
-                HourlyForecastSection(hourlyForecast = hourlyForecast)
-                WeeklyForecastCard(forecasts = weeklyForecast)
+                WeatherDetailsGridSection(weatherDetails = weatherDetails, isNight)
+                HourlyForecastSection(hourlyForecast = hourlyForecast, isNight)
+                WeeklyForecastCard(forecasts = weeklyForecast, isNight)
             }
         }
     }
 
-}
-
-
-@SuppressLint("ViewModelConstructorInComposable")
-@Preview(showBackground = true)
-@Composable
-fun WeatherScreenPreview() {
-    WeatherScreen(getKoin().get())
 }

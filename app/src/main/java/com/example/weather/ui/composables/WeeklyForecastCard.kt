@@ -23,14 +23,19 @@ import com.example.weather.ui.uiState.WeeklyForecastItem
 
 @Composable
 fun WeeklyForecastCard(
-    forecasts: List<WeeklyForecastItem>,
-) {
+    forecasts: List<WeeklyForecastItem>, isNight: Boolean
+)
+ {
     Column(modifier = Modifier.padding(horizontal = 12.dp)) {
         VerticalSpacer24()
         Text(
             text = "Next 7 days",
             fontSize = 20.sp,
-            color = if (isSystemInDarkTheme()) Color.White else Color(0xFF060414),
+            color = if (isNight) {
+                Color.White
+            }else{
+                Color(0xFF060414)
+            },
             fontWeight = FontWeight.SemiBold,
             fontFamily = urbanistFont,
             modifier = Modifier.padding(start = 16.dp)
@@ -41,7 +46,11 @@ fun WeeklyForecastCard(
     Column(
         modifier = Modifier
             .background(
-                color = MaterialTheme.colorScheme.surface.copy(0.7f),
+                color = if (isNight) {
+                    Color(0xFF060414).copy(alpha = 0.7f)
+                }else{
+                    MaterialTheme.colorScheme.surface.copy(alpha = 0.7f)
+                },
                 shape = RoundedCornerShape(20.dp)
             )
             .border(
@@ -57,7 +66,8 @@ fun WeeklyForecastCard(
                 day = forecast.day,
                 maxTemp = forecast.maxTemp.toString()+"°C",
                 minTemp = forecast.minTemp.toString()+"°C",
-                weatherIcon = forecast.iconResId
+                weatherIcon = forecast.iconResId,
+                isNight = isNight
             )
 
 
@@ -81,6 +91,7 @@ fun WeeklyForecastCard(
 @Composable
 fun WeeklyForecastCardPreview() {
     WeeklyForecastCard(
+        isNight = false,
         forecasts = listOf(
             WeeklyForecastItem("Mon", 30, 20, R.drawable.clear_sky),
             WeeklyForecastItem("Tue", 28, 18, R.drawable.clear_sky),

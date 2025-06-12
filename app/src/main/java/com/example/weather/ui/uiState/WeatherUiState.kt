@@ -38,6 +38,7 @@ data class WeatherDetailsState(
 
 data class WeatherUiState(
     val loading: LoadingState = LoadingState(),
+    val isNight: Boolean = false,
     val currentWeather: CurrentWeatherState = CurrentWeatherState(),
     val hourlyForecast: HourlyForecastState = HourlyForecastState(),
     val weeklyForecast: WeeklyForecastState = WeeklyForecastState(),

@@ -1,7 +1,6 @@
 package com.example.weather.ui.composables
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -23,7 +23,7 @@ import com.example.weather.ui.theme.urbanistFont
 
 
 @Composable
-fun LocationInfo(locationName: String) {
+fun LocationInfo(locationName: String, isNight: Boolean) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -35,7 +35,7 @@ fun LocationInfo(locationName: String) {
             contentDescription = "Weather Icon",
             modifier = Modifier.size(24.dp),
             colorFilter = ColorFilter.tint(
-                color = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onBackground
+                color = if (isNight) Color(0xFFE5E5E5) else MaterialTheme.colorScheme.onBackground
             )
         )
         Text(
@@ -44,7 +44,7 @@ fun LocationInfo(locationName: String) {
             fontWeight = FontWeight.Medium,
             fontSize = 16.sp,
             letterSpacing = 0.25.sp,
-            color = MaterialTheme.colorScheme.onBackground,
+            color = if (isNight) Color(0xFFE5E5E5) else MaterialTheme.colorScheme.onBackground,
             lineHeight = 20.sp,
             modifier = Modifier.padding(start = 4.dp)
         )
@@ -56,6 +56,7 @@ fun LocationInfo(locationName: String) {
 @Composable
 fun LocationInfoPreview() {
     LocationInfo(
+        isNight = false,
         locationName = "New York City"
     )
 }

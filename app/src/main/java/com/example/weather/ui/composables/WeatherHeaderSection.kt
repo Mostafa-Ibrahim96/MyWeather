@@ -18,7 +18,8 @@ import com.example.weather.ui.uiState.WeatherUiState
 @Composable
  fun WeatherHeader(
     state: WeatherUiState,
-    isScrolled: Boolean
+    isScrolled: Boolean,
+    isNight: Boolean
 ) {
 
     val imageSizeHeight by animateDpAsState(targetValue = if (isScrolled) 112.dp else 200.dp)
@@ -33,21 +34,23 @@ Column(modifier = Modifier.padding(horizontal = 12.dp),
     horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
     ) {
     Spacer(modifier = Modifier.height(64.dp))
-    LocationInfo(state.currentWeather.locationName)
+    LocationInfo(state.currentWeather.locationName,isNight)
     WeatherIcon(
         modifier = Modifier
             .offset(x = iconOffsetX, y = iconOffsetY),
         painter = if (state.currentWeather.weatherIcon != 0) state.currentWeather.weatherIcon else R.drawable.fastwind,
         imageSizeHeight = imageSizeHeight,
         imageSizeWidth = imageSizeWidth,
-        shapeSize = shapeSize
+        shapeSize = shapeSize,
+        isNight = state.isNight
     )
     TemperatureInfo(
         modifier = Modifier.offset(x = tempOffsetX, y = tempOffsetY),
         temperature = state.currentWeather.temperature + "°C",
         weatherDescription = state.currentWeather.weatherDescription,
         highTemperature = state.currentWeather.highTemperature + "°C",
-        lowTemperature = state.currentWeather.lowTemperature + "°C"
+        lowTemperature = state.currentWeather.lowTemperature + "°C",
+        isNight = state.isNight
     )
 }
 }

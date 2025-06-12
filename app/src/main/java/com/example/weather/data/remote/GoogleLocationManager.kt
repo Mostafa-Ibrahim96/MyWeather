@@ -25,7 +25,7 @@ class GoogleLocationManager(
             ) == PackageManager.PERMISSION_GRANTED
 
             if (!hasFinePermission) {
-                println("Location not available: Permission ACCESS_FINE_LOCATION not granted")
+                Log.d("GoogleLocationManager","Location not available: Permission ACCESS_FINE_LOCATION not granted")
                 return null
             }
             val locationManager =
@@ -34,7 +34,7 @@ class GoogleLocationManager(
             val isNetworkEnabled =
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
             if (!isGpsEnabled && !isNetworkEnabled) {
-                println("Location not available: GPS and Network are disabled")
+                Log.d("GoogleLocationManager","Location not available: GPS and Network are disabled")
                 return null
             }
 
@@ -43,7 +43,7 @@ class GoogleLocationManager(
                 null
             ).await()
             if (location == null) {
-                println("Location not available: No location data received")
+                Log.d("GoogleLocationManager","Location not available: No location data received")
                 return null
             }
 

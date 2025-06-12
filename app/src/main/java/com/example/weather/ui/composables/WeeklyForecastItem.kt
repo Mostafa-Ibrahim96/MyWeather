@@ -14,6 +14,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,7 +31,8 @@ fun WeeklyForecastItem(
     day: String,
     maxTemp: String,
     minTemp: String,
-    weatherIcon: Int
+    weatherIcon: Int,
+    isNight: Boolean
 ) {
     Row(
         modifier = Modifier
@@ -47,7 +50,12 @@ fun WeeklyForecastItem(
             fontSize = 16.sp,
             letterSpacing = 0.25.sp,
             fontWeight = FontWeight(400),
-            color = MaterialTheme.colorScheme.onSurface.copy(0.6f)
+            color = if (isNight) {
+                Color(0xFFFFFFFF).copy(alpha = 0.6f)
+            }else{
+                MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f)
+            }
+
 
 
         )
@@ -81,7 +89,10 @@ fun WeeklyForecastItem(
                     painter = painterResource(id = R.drawable.arrowup),
                     contentDescription = "Max Temp Icon",
                     modifier = Modifier
-                        .size(12.dp)
+                        .size(12.dp),
+                    colorFilter = ColorFilter.tint(
+                        color = if (isNight) Color(0xFFFFFFFF).copy(0.87f) else MaterialTheme.colorScheme.onPrimary.copy(.87f)
+                    )
 
                 )
                 Text(
@@ -90,12 +101,22 @@ fun WeeklyForecastItem(
                     fontSize = 14.sp,
                     letterSpacing = 0.25.sp,
                     fontWeight = FontWeight(500),
-                    color = MaterialTheme.colorScheme.onSurface.copy(0.87f)
+                    color = if (isNight) {
+                        Color(0xFFFFFFFF).copy(alpha = 0.6f)
+                    }else{
+                        MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.87f)
+                    }
+
                 )
                 Image(
-                    painter = painterResource(id = R.drawable.line),
+                    painter = painterResource(id =if (isNight) R.drawable.line else R.drawable.line),
                     contentDescription = "Min Temp Icon",
-                    modifier = Modifier.padding(vertical = 5.dp)
+                    modifier = Modifier.padding(vertical = 5.dp),
+                    colorFilter = ColorFilter.tint(if (isNight) {
+                        Color(0xFFFFFFFF).copy(0.24f)
+                    } else {
+                        MaterialTheme.colorScheme.onPrimary.copy(0.24f)
+                    })
 
                 )
 
@@ -103,7 +124,10 @@ fun WeeklyForecastItem(
                     painter = painterResource(id = R.drawable.arrowdown),
                     contentDescription = "Min Temp Icon",
                     modifier = Modifier
-                        .size(12.dp)
+                        .size(12.dp),
+                    colorFilter = ColorFilter.tint(
+                        color = if (isNight) Color(0xFFFFFFFF).copy(0.87f) else MaterialTheme.colorScheme.onPrimary.copy(.87f)
+                    )
 
                 )
                 Text(
@@ -112,8 +136,11 @@ fun WeeklyForecastItem(
                     fontSize = 14.sp,
                     letterSpacing = 0.25.sp,
                     fontWeight = FontWeight(500),
-                    color = MaterialTheme.colorScheme.onSurface.copy(0.87f)
-                )
+                    color = if (isNight) {
+                        Color(0xFFFFFFFF).copy(alpha = 0.6f)
+                    }else{
+                        MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.87f)
+                    }                )
             }
         }
     }
@@ -127,6 +154,7 @@ fun WeeklyForecastItemPreview() {
         day = "Wednesday",
         maxTemp = "32°C",
         minTemp = "20°C",
-        weatherIcon = R.drawable.mainlyclear
+        weatherIcon = R.drawable.mainlyclear,
+        isNight = false
     )
 }

@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -15,12 +16,16 @@ import com.example.weather.ui.theme.urbanistFont
 import com.example.weather.ui.uiState.HourlyForecastUiState
 
 @Composable
- fun HourlyForecastSection(hourlyForecast:List<HourlyForecastUiState>) {
+ fun HourlyForecastSection(hourlyForecast:List<HourlyForecastUiState>, isNight: Boolean) {
     VerticalSpacer24()
     Text(
         text = "Today",
         fontSize = 20.sp,
-        color = MaterialTheme.colorScheme.onSurface,
+        color = if (isNight) {
+            Color.White
+        }else{
+            Color(0xFF060414)
+        },
         fontWeight = FontWeight.SemiBold,
         fontFamily = urbanistFont,
         modifier = Modifier.padding(start = 12.dp)
@@ -34,6 +39,7 @@ import com.example.weather.ui.uiState.HourlyForecastUiState
         items(hourlyForecast) { (painter, temp,hour) ->
 
             ForecastItem(
+                isNight = isNight,
                 hourlyForecastUiState = HourlyForecastUiState(
                     weatherIconRes = painter,
                     temperature = temp,

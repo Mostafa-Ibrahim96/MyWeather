@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -31,19 +32,29 @@ fun WeatherDetailsItem(
     modifier: Modifier = Modifier,
     painter: Int,
     value: String,
-    description: String
+    description: String,
+    isNight:Boolean
 ) {
 
     Column(
         modifier = modifier
             .height(115.dp)
             .background(
-                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
+                color = if (isNight) {
+                    Color(0xFF060414).copy(alpha = 0.6f)
+                }else{
+                    MaterialTheme.colorScheme.surface.copy(alpha = 0.6f)
+                },
                 shape = RoundedCornerShape(24.dp)
             )
             .border(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.08f),
+                color = if (isNight) {
+                    Color(0xFFFFFFFF).copy(alpha = 0.08f)
+                }else{
+                    MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.08f)
+                }
+             ,
                 shape = RoundedCornerShape(24.dp)
             )
             .padding
@@ -70,7 +81,12 @@ fun WeatherDetailsItem(
             fontFamily = urbanistFont,
             fontWeight = FontWeight(500),
             letterSpacing = 0.25.sp,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.87f),
+            color = if (isNight) {
+                Color(0xFFFFFFFF).copy(alpha = 0.87f)
+            }else{
+                MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.87f)
+            }
+
         )
         Text(
             text = description,
@@ -78,57 +94,19 @@ fun WeatherDetailsItem(
             fontFamily = urbanistFont,
             fontWeight = FontWeight(400),
             letterSpacing = 0.25.sp,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+            color = if (isNight) {
+                Color(0xFFFFFFFF).copy(alpha = 0.6f)
+            }else{
+                MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f)
+            }
+          ,
             textAlign = TextAlign.Center
         )
 
     }
 }
 
-@Composable
-fun WeatherDetailsItemRow(
-    modifier: Modifier = Modifier,
-    painter: Int,
-    value: String,
-    description: String
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
 
-        ) {
-        WeatherDetailsItem(
-            modifier = Modifier.weight(1f),
-            painter = painter,
-            value = value,
-            description = description
-        )
-        WeatherDetailsItem(
-            modifier = Modifier.weight(1f),
-            painter = painter,
-            value = value,
-            description = description
-        )
-        WeatherDetailsItem(
-            modifier = Modifier.weight(1f),
-            painter = painter,
-            value = value,
-            description = description
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun WeatherDetailsItemPreview() {
-    WeatherDetailsItem(
-        painter = R.drawable.humidity,
-        value = "60%",
-        description = "Humidity"
-    )
-}
 
 
 

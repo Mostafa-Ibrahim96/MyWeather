@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -32,7 +33,8 @@ import com.example.weather.ui.uiState.HourlyForecastUiState
 
 @Composable
 fun ForecastItem(
-    hourlyForecastUiState: HourlyForecastUiState
+    hourlyForecastUiState: HourlyForecastUiState,
+    isNight: Boolean = false
 ) {
     Box(
         modifier = Modifier
@@ -65,12 +67,24 @@ fun ForecastItem(
                 .height(120.dp)
                 .width(88.dp)
                 .background(
-                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
+
+                    color = if (isNight) {
+                        Color(0xFF060414).copy(alpha = 0.6f)
+                    }else{
+                        MaterialTheme.colorScheme.surface.copy(alpha = 0.6f)
+                    },
+
+
+
                     shape = RoundedCornerShape(20.dp)
                 )
                 .border(
                     width = 1.dp,
-                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.08f),
+                    color = if (isNight) {
+                        Color(0xFFFFFFFF).copy(alpha = 0.08f)
+                    }else{
+                        MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.08f)
+                    },
                     shape = RoundedCornerShape(20.dp)
                 )
                 .align(Alignment.BottomCenter)
@@ -83,11 +97,13 @@ fun ForecastItem(
             ) {
 
                 TemperatureValue(
-                    temperatureValue = hourlyForecastUiState.temperature
+                    temperatureValue = hourlyForecastUiState.temperature,
+                    isNight = isNight,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Hour(
-                    hour = hourlyForecastUiState.hour
+                    hour = hourlyForecastUiState.hour,
+                    isNight = isNight
                 )
             }
 
@@ -99,7 +115,7 @@ fun ForecastItem(
 
 
 @Composable
-fun TemperatureValue(modifier: Modifier = Modifier, temperatureValue: String) {
+fun TemperatureValue(modifier: Modifier = Modifier, temperatureValue: String, isNight: Boolean = false) {
     Text(
         modifier = modifier,
         text = temperatureValue,
@@ -107,20 +123,30 @@ fun TemperatureValue(modifier: Modifier = Modifier, temperatureValue: String) {
         letterSpacing = 0.25.sp,
         fontWeight = FontWeight(500),
         fontFamily = urbanistFont,
-        color = MaterialTheme.colorScheme.onSurface.copy(0.87f),
+        color = if (isNight) {
+            Color(0xFFFFFFFF).copy(alpha = 0.87f)
+        }else{
+            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.87f)
+        }
+,
         textAlign = TextAlign.Center,
     )
 }
 
 @Composable
-fun Hour(modifier: Modifier = Modifier, hour: String) {
+fun Hour(modifier: Modifier = Modifier, hour: String, isNight: Boolean = false) {
     Text(
         modifier = modifier,
         text = hour,
         fontSize = 16.sp,
         fontWeight = FontWeight(500),
         fontFamily = urbanistFont,
-        color = MaterialTheme.colorScheme.onSurface.copy(0.6f),
+
+        color = if (isNight) {
+            Color(0xFFFFFFFF).copy(alpha = 0.6f)
+        }else{
+            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+        }
     )
 }
 

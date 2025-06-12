@@ -14,7 +14,7 @@ import com.example.weather.R
 import com.example.weather.ui.uiState.WeatherDetailsState
 
 @Composable
- fun WeatherDetailsGridSection(weatherDetails: List<WeatherDetailsState>) {
+ fun WeatherDetailsGridSection(weatherDetails: List<WeatherDetailsState>, isNight: Boolean) {
     VerticalSpacer24()
     LazyVerticalGrid(
         modifier = Modifier
@@ -37,8 +37,10 @@ import com.example.weather.ui.uiState.WeatherDetailsState
                     detail.pressure.isNotEmpty() -> detail.pressure + " hPa"
                     detail.feelsLike.isNotEmpty() -> detail.feelsLike + "°C"
                     else -> "N/A"
-                }
+                },
+                isNight = isNight
             )
+
 
         }
     }
