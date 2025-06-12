@@ -16,7 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -29,7 +28,7 @@ import com.example.weather.ui.theme.urbanistFont
 
 @Composable
 fun WeatherDetailsItem(
-    modifier: Modifier= Modifier,
+    modifier: Modifier = Modifier,
     painter: Int,
     value: String,
     description: String
@@ -37,23 +36,23 @@ fun WeatherDetailsItem(
 
     Column(
         modifier = modifier
-            .fillMaxWidth()
             .height(115.dp)
             .background(
-                color =MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.6f),
                 shape = RoundedCornerShape(24.dp)
             )
             .border(
                 width = 1.dp,
-                color =MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.08f),
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.08f),
                 shape = RoundedCornerShape(24.dp)
-            )   . padding
+            )
+            .padding
                 (
                 top = 16.dp,
                 bottom = 16.dp,
                 end = 8.dp,
                 start = 8.dp
-            ) ,
+            ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
@@ -85,13 +84,18 @@ fun WeatherDetailsItem(
 
     }
 }
+
 @Composable
-fun WeatherDetailsItemRow(modifier: Modifier= Modifier,
-                          painter: Int,
-                          value: String,
-                          description: String) {
+fun WeatherDetailsItemRow(
+    modifier: Modifier = Modifier,
+    painter: Int,
+    value: String,
+    description: String
+) {
     Row(
-        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(6.dp),
 
         ) {

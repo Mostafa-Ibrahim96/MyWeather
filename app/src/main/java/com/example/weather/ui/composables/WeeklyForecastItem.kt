@@ -8,12 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Divider
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,7 +37,7 @@ fun WeeklyForecastItem(
             .height(61.dp)
             .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(9.5.dp),
-        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically
 
     ) {
         Text(
@@ -51,69 +52,71 @@ fun WeeklyForecastItem(
 
         )
 
+
+
+        Image(
+            modifier = Modifier
+                .height(32.dp)
+                .weight(1f),
+            painter = painterResource(id = weatherIcon),
+            contentDescription = "Weather Icon",
+            contentScale = ContentScale.Inside
+
+        )
+
+
         Box(
             modifier = Modifier
-                .weight(1f)
-                .height(45.dp),
-            contentAlignment = androidx.compose.ui.Alignment.Center
-
-
+                .weight(1f),
+            contentAlignment = Alignment.CenterEnd
         ) {
 
-            Image(
-                painter = painterResource(id = weatherIcon),
-                contentDescription = "Weather Icon",
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically,
 
                 )
-        }
+            {
+                Image(
+                    painter = painterResource(id = R.drawable.arrowup),
+                    contentDescription = "Max Temp Icon",
+                    modifier = Modifier
+                        .size(12.dp)
 
-        Row(
+                )
+                Text(
+                    text = maxTemp,
+                    fontFamily = urbanistFont,
+                    fontSize = 14.sp,
+                    letterSpacing = 0.25.sp,
+                    fontWeight = FontWeight(500),
+                    color = MaterialTheme.colorScheme.onSurface.copy(0.87f)
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.line),
+                    contentDescription = "Min Temp Icon",
+                    modifier = Modifier.padding(vertical = 5.dp)
 
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+                )
 
-            )
-        {
-            Image(
-                painter = painterResource(id = R.drawable.arrowup),
-                contentDescription = "Max Temp Icon",
-                modifier = Modifier
-                    .size(12.dp)
+                Image(
+                    painter = painterResource(id = R.drawable.arrowdown),
+                    contentDescription = "Min Temp Icon",
+                    modifier = Modifier
+                        .size(12.dp)
 
-            )
-            Text(
-                text = maxTemp,
-                fontFamily = urbanistFont,
-                fontSize = 14.sp,
-                letterSpacing = 0.25.sp,
-                fontWeight = FontWeight(500),
-                color = MaterialTheme.colorScheme.onSurface.copy(0.87f)
-            )
-            Image(
-                painter = painterResource(id = R.drawable.line),
-                contentDescription = "Min Temp Icon",
-                modifier = Modifier.padding(vertical = 5.dp)
-
-            )
-
-            Image(
-                painter = painterResource(id = R.drawable.arrowdown),
-                contentDescription = "Min Temp Icon",
-                modifier = Modifier
-                    .size(12.dp)
-
-            )
-            Text(
-                text = minTemp,
-                fontFamily = urbanistFont,
-                fontSize = 14.sp,
-                letterSpacing = 0.25.sp,
-                fontWeight = FontWeight(500),
-                color = MaterialTheme.colorScheme.onSurface.copy(0.87f)
-            )
+                )
+                Text(
+                    text = minTemp,
+                    fontFamily = urbanistFont,
+                    fontSize = 14.sp,
+                    letterSpacing = 0.25.sp,
+                    fontWeight = FontWeight(500),
+                    color = MaterialTheme.colorScheme.onSurface.copy(0.87f)
+                )
+            }
         }
     }
-
 
 }
 

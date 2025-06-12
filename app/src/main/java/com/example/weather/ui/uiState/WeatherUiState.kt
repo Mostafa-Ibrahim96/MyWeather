@@ -49,7 +49,12 @@ data class WeeklyForecastItem(
     val minTemp: Int,
     val iconResId: Int
 )
-data class HourlyForecastItem(
+data class WeatherDetailItem(
+    val icon: Int  ,
+    val title: String,
+    val description: String,
+)
+data class HourlyForecastUiState(
     val weatherIconRes: Int,
     val temperature: String,
     val hour: String,

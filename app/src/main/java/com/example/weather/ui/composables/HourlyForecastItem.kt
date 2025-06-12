@@ -27,13 +27,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.weather.R
 import com.example.weather.ui.theme.urbanistFont
+import com.example.weather.ui.uiState.HourlyForecastUiState
 
 
 @Composable
 fun ForecastItem(
-    painter: Int,
-    temperatureValue: String,
-    hour: String,
+    hourlyForecastUiState: HourlyForecastUiState
 ) {
     Box(
         modifier = Modifier
@@ -53,7 +52,7 @@ fun ForecastItem(
         ) {
             Image(
                 modifier = Modifier.size(58.dp),
-                painter = painterResource(painter),
+                painter = painterResource(hourlyForecastUiState.weatherIconRes),
                 contentDescription = "Image",
                 alignment = Alignment.Center,
                 contentScale = ContentScale.Crop
@@ -84,11 +83,11 @@ fun ForecastItem(
             ) {
 
                 TemperatureValue(
-                    temperatureValue = temperatureValue
+                    temperatureValue = hourlyForecastUiState.temperature
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Hour(
-                    hour = hour
+                    hour = hourlyForecastUiState.hour
                 )
             }
 
@@ -130,9 +129,10 @@ fun Hour(modifier: Modifier = Modifier, hour: String) {
 @Composable
 fun ForecastItemPreview() {
     ForecastItem(
-        painter = R.drawable.clear_sky,
-        temperatureValue = "25°",
-        hour = "12:00"
-
+        hourlyForecastUiState = HourlyForecastUiState(
+            hour = "12 PM",
+            temperature = "30°C",
+            weatherIconRes = R.drawable.clear_sky
+        )
     )
 }

@@ -5,9 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.weather.R
 import com.example.weather.data.remote.LocationProvider
 import com.example.weather.ui.repository.WeatherRepository
-import com.example.weather.ui.uiState.HourlyForecastItem
-import com.example.weather.ui.uiState.WeatherDetailUiState
-import com.example.weather.ui.uiState.WeatherDetailsGrid
+import com.example.weather.ui.uiState.HourlyForecastUiState
+import com.example.weather.ui.uiState.WeatherDetailsState
 import com.example.weather.ui.uiState.WeatherUiState
 import com.example.weather.ui.uiState.WeeklyForecastItem
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,10 +24,10 @@ class WeatherViewModel(
     private val _state = MutableStateFlow(WeatherUiState())
     val state = _state.asStateFlow()
 
-    private val _weatherDetails = MutableStateFlow(WeatherDetailsGrid())
+    private val _weatherDetails = MutableStateFlow<List<WeatherDetailsState>>(emptyList())
     val weatherDetails = _weatherDetails.asStateFlow()
 
-    private val _hourlyForecast = MutableStateFlow<List<HourlyForecastItem>>(emptyList())
+    private val _hourlyForecast = MutableStateFlow<List<HourlyForecastUiState>>(emptyList())
     val hourlyForecast = _hourlyForecast.asStateFlow()
 
     private val _weeklyForecast = MutableStateFlow<List<WeeklyForecastItem>>(emptyList())
@@ -68,31 +67,29 @@ class WeatherViewModel(
                     )
                 )
 
-                _weatherDetails.value = WeatherDetailsGrid(
-                    detailGrid = listOf(
-                        WeatherDetailUiState(
+                _weatherDetails.value =
+                    listOf(
+                        WeatherDetailsState(
                             windSpeed = weatherData.current.wind_speed_10m?.toString() ?: "N/A",
-                            weatherCode = weatherCode
                         ),
-                        WeatherDetailUiState(
+                        WeatherDetailsState(
                             humidity = weatherData.current.relative_humidity_2m?.toString()
-                                ?: "N/A", weatherCode = weatherCode
+                                ?: "N/A"
                         ),
-                        WeatherDetailUiState(
+                        WeatherDetailsState(
                             rain = weatherData.current.rain?.toString() ?: "N/A",
-                            weatherCode = weatherCode
+
+                            ),
+                        WeatherDetailsState(uv = "2"),
+                        WeatherDetailsState(
+                            pressure = weatherData.current.pressure_msl?.toString() ?: "N/A"
                         ),
-                        WeatherDetailUiState(uv = "2", weatherCode = weatherCode),
-                        WeatherDetailUiState(
-                            pressure = weatherData.current.pressure_msl?.toString() ?: "N/A",
-                            weatherCode = weatherCode
-                        ),
-                        WeatherDetailUiState(
+                        WeatherDetailsState(
                             feelsLike = weatherData.current.apparent_temperature?.toString()
-                                ?: "N/A", weatherCode = weatherCode
+                                ?: "N/A"
                         )
                     )
-                )
+
 
 
                 weatherData.hourly?.let { hourly ->
@@ -103,7 +100,7 @@ class WeatherViewModel(
                         val weatherCode = hourly.weather_code?.getOrNull(index) ?: 0
                         val forecastHour = hourTime.substring(0, 2).toIntOrNull() ?: 0
                         val isNightForHour = forecastHour >= 18 || forecastHour < 6
-                        HourlyForecastItem(
+                        HourlyForecastUiState(
                             hour = hourTime,
                             temperature = "$temp°C",
                             weatherIconRes = mapWeatherCodeToResource(weatherCode, isNightForHour)
